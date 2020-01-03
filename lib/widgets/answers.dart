@@ -5,12 +5,14 @@ class Answers extends StatelessWidget {
   final Function _incrementScore;
   final Function _showEndGame;
   final Function _checkAnswer;
+  final Function _startNewRound;
 
   Answers(
     this._possibleAnswers,
     this._checkAnswer,
     this._incrementScore,
     this._showEndGame,
+    this._startNewRound,
   );
 
   @override
@@ -28,6 +30,7 @@ class Answers extends StatelessWidget {
                  onPressed: () {
                 if (_checkAnswer(item)) {
                   _incrementScore();
+                  _startNewRound();
                 } else {
                   _showEndGame(context);
                 }
@@ -45,56 +48,5 @@ class Answers extends StatelessWidget {
             .toList(),
       ),
     );
-    // return Row(
-    //   mainAxisAlignment: MainAxisAlignment.center,
-    //   children: <Widget>[
-    //     Expanded(
-    //       child: Container(
-    //         height: 200,
-    //         padding: EdgeInsets.only(left: 5, right: 5),
-    //         child: FlatButton(
-    //           child: Text(
-    //             _possibleAnswers[0].toString(),
-    //             style: TextStyle(
-    //               fontSize: 50,
-    //               fontWeight: FontWeight.bold,
-    //             ),
-    //           ),
-    //           color: Colors.blue,
-    //           onPressed: () {
-    //             if (_checkAnswer(_possibleAnswers[0])) {
-    //               _incrementScore();
-    //             } else {
-    //               _showEndGame(context);
-    //             }
-    //           },
-    //         ),
-    //       ),
-    //     ),
-    //     Expanded(
-    //       child: Container(
-    //         height: 200,
-    //         padding: EdgeInsets.only(left: 5, right: 0),
-    //         child: FlatButton(
-    //           child: Text(
-    //             _possibleAnswers[1].toString(),
-    //             style: TextStyle(
-    //               fontSize: 50,
-    //               fontWeight: FontWeight.bold,
-    //             ),
-    //           ),
-    //           color: Colors.blue,
-    //           onPressed: () {
-    //             if (_checkAnswer(_possibleAnswers[1])) {
-    //               _incrementScore();
-    //             } else {
-    //               _showEndGame(context);
-    //             }
-    //           },
-    //         ),
-    //       ),
-    //     ),
-    //   ],
-    // );
   }
 }
