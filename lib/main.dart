@@ -109,7 +109,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    _startNewRound();
+    if (_num1 == null || _num2 == null || _possibleAnswers.isEmpty) {
+      _startNewRound();
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -129,6 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
             _checkAnswer,
             _incrementScore,
             _showEndGame,
+            _startNewRound,
           ),
         ]),
       ),
