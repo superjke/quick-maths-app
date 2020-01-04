@@ -17,7 +17,6 @@ class Answers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _possibleAnswers.shuffle();
     return Expanded(
       child: GridView.count(
         crossAxisCount: 2,
@@ -32,7 +31,7 @@ class Answers extends StatelessWidget {
                   _incrementScore();
                   _startNewRound();
                 } else {
-                  _showEndGame(context);
+                  _showEndGame(context, 0);
                 }
               },
                 child: Text(
