@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'dart:math';
+import 'dart:async';
 
 import './widgets/question.dart';
 import './widgets/score.dart';
 import './widgets/end_game.dart';
 import './widgets/answers.dart';
 import './widgets/highest_score.dart';
+import './widgets/countdown.dart';
 
 void main() => runApp(MyApp());
 
@@ -38,10 +40,34 @@ class _MyHomePageState extends State<MyHomePage> {
   int _num2;
   List<int> _possibleAnswers = [];
   int _highestScore = 0;
+  Timer _timer;
+  int _countdown = 10;
+
+  void _startTimer() {
+    if (_countdown != 10) _countdown = 10;
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) => setState(
+        () {
+          if (_countdown < 1) {
+            timer.cancel();
+            _showEndGame(context, 1);
+          } else {
+            _countdown = _countdown - 1;
+          }
+        },
+      ),
+    );
+  }
 
   void _generateNewNums() {
     _num1 = _getRand(5, 15);
     _num2 = _getRand(5, 15);
+  }
+
+  void _stopTimer() {
+    if (_timer != null) _timer.cancel();
   }
 
   void _generatePossibleAnswers() {
@@ -59,12 +85,15 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
     _possibleAnswers = tempSet.toList();
+    _possibleAnswers.shuffle();
   }
 
   void _startNewRound() {
     setState(() {
       _generateNewNums();
       _generatePossibleAnswers();
+      _stopTimer();
+      _startTimer();
     });
   }
 
@@ -80,15 +109,12 @@ class _MyHomePageState extends State<MyHomePage> {
     _startNewRound();
   }
 
-  void _showEndGame(BuildContext ctx) {
+  void _showEndGame(BuildContext ctx, int reason) {
+    _stopTimer();
     showModalBottomSheet(
         context: ctx,
         builder: (_) {
-          return EndGame(
-            _num1,
-            _num2,
-            _restartGame,
-          );
+          return EndGame(_num1, _num2, _restartGame, reason);
         },
         isDismissible: false);
   }
@@ -120,11 +146,17 @@ class _MyHomePageState extends State<MyHomePage> {
         alignment: Alignment.topCenter,
         child: Column(children: <Widget>[
           HighestScore(_highestScore),
+          Countdown(_countdown),
           Score(_score),
           Padding(
-            padding:
-                const EdgeInsets.only(left: 0, top: 30, right: 0, bottom: 30),
-            child: Question(_num1, _num2),
+            padding: const EdgeInsets.only(
+              top: 15,
+              bottom: 15,
+            ),
+            child: Question(
+              _num1,
+              _num2,
+            ),
           ),
           Answers(
             _possibleAnswers,
